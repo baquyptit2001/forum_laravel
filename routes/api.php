@@ -19,9 +19,13 @@ Route::prefix('accounts')->group(function () {
     });
 });
 
-Route::group(['prefix' => 'questions', 'middleware' => 'auth:sanctum'], function () {
-   Route::post('add', [\App\Http\Controllers\QuestionController::class, 'store'])->name('question.add');
-   Route::get('/', [\App\Http\Controllers\QuestionController::class, 'index'])->name('question.list');
+Route::group(['prefix' => 'questions'], function () {
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::post('add', [\App\Http\Controllers\QuestionController::class, 'store'])->name('question.add');
+        Route::post('add_answer', [\App\Http\Controllers\AnswerController::class, 'store'])->name('answer.add');
+        Route::post('reply_answer', [\App\Http\Controllers\ReplyAnswerController::class, 'store'])->name('reply.add');
+    });
+    Route::get('{slug}', [\App\Http\Controllers\QuestionController::class, 'show'])->name('question.show');
+    Route::get('/', [\App\Http\Controllers\QuestionController::class, 'index'])->name('question.list');
 });
-   Route::get('a', [\App\Http\Controllers\QuestionController::class, 'index'])->name('question.list');
 

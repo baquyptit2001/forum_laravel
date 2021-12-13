@@ -16,7 +16,8 @@ class QuestionController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json(Question::with(['user'])->get());
+        $return = QuestionResource::collection(Question::all());
+        return response()->json($return);
     }
 
     /**
@@ -42,7 +43,6 @@ class QuestionController extends Controller
                 'message' => 'Thêm câu hỏi thành công',
             ]);
         } catch (\Exception $e) {
-            return $e;
             return response()->json([
                 'message' => 'Không thành công, vui lòng thử lại sau',
                 'status_code' => 500
@@ -53,12 +53,17 @@ class QuestionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Question  $question
-     * @return \Illuminate\Http\Response
+     * @param $slug
+     * @return JsonResponse
      */
-    public function show(Question $question)
+    public function show($slug)
     {
-        //
+        $question = Question::where('slug', $slug)->first();
+        if ($question) {
+            $question->increment('views');
+            $return = new QuestionResource($question);
+            return response()->json($return);
+        }
     }
 
     /**
