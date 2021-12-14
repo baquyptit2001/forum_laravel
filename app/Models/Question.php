@@ -44,6 +44,11 @@ class Question extends Model
         return $this->hasMany(QuestionVote::class, 'question_id');
     }
 
+    public function best_answer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Answer::class, 'best_answer_id');
+    }
+
     public function getDateCreatedAttribute()
     {
         return $this->created_at->shortRelativeDiffForHumans();

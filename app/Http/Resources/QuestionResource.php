@@ -20,14 +20,16 @@ class QuestionResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'question' => $this->question,
-            'user' => $this->user->username,
+            'user' => $this->user,
+            'username' => $this->user->username,
             'status' => $this->status,
             'date_created' => $this->date_created,
             'date_created_full' => $this->date_created_full,
             'views' => $this->views,
             'vote' => $this->vote_count,
-            'answers' => AnswerResource::collection($this->answer),
+            'answers' => AnswerResource::collection($this->answer->where('id', '!=', $this->best_answer_id)),
             'answer_count' => count($this->answer),
+            'best_answer' => AnswerResource::make($this->best_answer)
         ];
     }
 }

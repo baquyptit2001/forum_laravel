@@ -16,7 +16,7 @@ class AnswerResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => $this->user->username,
+            'user' => $this->user,
             'answer' => $this->answer,
             'created_at' => $this->created_at->diffForHumans(),
             'reply' => $this->reply,

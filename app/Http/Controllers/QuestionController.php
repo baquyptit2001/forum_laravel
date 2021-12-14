@@ -20,17 +20,7 @@ class QuestionController extends Controller
         return response()->json($return);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         try {
             $question = new Question();
@@ -56,47 +46,28 @@ class QuestionController extends Controller
      * @param $slug
      * @return JsonResponse
      */
-    public function show($slug)
+    public function show($slug): JsonResponse
     {
         $question = Question::where('slug', $slug)->first();
         if ($question) {
             $question->increment('views');
             $return = new QuestionResource($question);
             return response()->json($return);
+        } else {
+            return response()->json([
+                'message' => 'Không tìm thấy câu hỏi',
+                'status_code' => 404
+            ]);
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Question  $question
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Question $question)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param  \App\Models\Question  $question
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Question $question)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Question  $question
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Question $question)
-    {
-        //
+    public function best_answer(Request $request) {
+        $question = Question::where('id', $request->question_id)->first();
+        if ($question->best_answer_id == $request->answer_id) {
+            $question->best_answer_id = null;
+        } else {
+            $question->best_answer_id = $request->answer_id;
+        }
+        return $question->save();
     }
 }

@@ -17,6 +17,8 @@ Route::prefix('accounts')->group(function () {
         Route::get('log-out', [\App\Http\Controllers\UserController::class, 'logOut'])->name('user.logout')->middleware('auth:sanctum');
         Route::get('info', [\App\Http\Controllers\UserController::class, 'getInfo'])->name('user.info');
     });
+    Route::post('reset-password', [\App\Http\Controllers\ResetPasswordController::class, 'sendMail'])->name('user.reset-password');
+    Route::post('reset-password/{token}', [\App\Http\Controllers\ResetPasswordController::class, 'reset'])->name('user.reset');
 });
 
 Route::group(['prefix' => 'questions'], function () {
@@ -24,6 +26,7 @@ Route::group(['prefix' => 'questions'], function () {
         Route::post('add', [\App\Http\Controllers\QuestionController::class, 'store'])->name('question.add');
         Route::post('add_answer', [\App\Http\Controllers\AnswerController::class, 'store'])->name('answer.add');
         Route::post('reply_answer', [\App\Http\Controllers\ReplyAnswerController::class, 'store'])->name('reply.add');
+        Route::post('choose_best_answer', [\App\Http\Controllers\QuestionController::class, 'best_answer'])->name('question.best_answer');
     });
     Route::get('{slug}', [\App\Http\Controllers\QuestionController::class, 'show'])->name('question.show');
     Route::get('/', [\App\Http\Controllers\QuestionController::class, 'index'])->name('question.list');
