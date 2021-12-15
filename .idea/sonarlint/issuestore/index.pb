@@ -39,7 +39,7 @@ Bdatabase/migrations/2019_08_19_000000_create_failed_jobs_table.php,1/f/1f602a2
 Mdatabase/migrations/2019_12_14_000001_create_personal_access_tokens_table.php,9/6/968051ae9d34530937eafe0273bc01c45c4755bd
 u
 Edatabase/migrations/2021_12_13_062726_create_answer_replies_table.php,d/a/da050f4508e8735c43eacbe333745d7fb4ff68a3
-4
-.env,3/c/3c84dcdc6bbe3d7817c49dcdc327b926fea1808a
 v
 Fdatabase/migrations/2014_10_12_100000_create_password_resets_table.php,e/f/eff59cfca55470b5a81fdbeb82498e8bfe5c8174
+K
+app/Models/QuestionVote.php,4/1/41ebc162a51c69780ff995b9f29ac814a7164324
