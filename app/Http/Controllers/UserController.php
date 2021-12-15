@@ -23,14 +23,14 @@ class UserController extends Controller
         return phpinfo();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function isLogged(Request $request): bool
     {
-        //
+        $user = auth('sanctum')->user();
+        if ($user) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

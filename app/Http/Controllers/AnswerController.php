@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Answer;
+use App\Models\AnswerVote;
 use App\Models\Question;
 use Illuminate\Http\Request;
 
@@ -26,6 +27,24 @@ class AnswerController extends Controller
     public function create()
     {
         //
+    }
+
+    public function vote (Request $request){
+        $extist_vote = AnswerVote::where('user_id', $request->user_id)->where('answer_id', $request->answer_id)->first();
+        if($extist_vote) {
+            if ($extist_vote->vote == $request->vote){
+                $extist_vote->delete();
+                return response()->json([
+                    'status_code' => 200,
+                    'message' => 'Vote thành công',
+                ]);
+            }
+        }
+        AnswerVote::updateOrCreate(
+            ['user_id' => $request->user_id, 'answer_id' => $request->answer_id],
+            ['vote' => $request->vote]
+        );
+        return response()->json(['status_code' => 200]);
     }
 
     /**

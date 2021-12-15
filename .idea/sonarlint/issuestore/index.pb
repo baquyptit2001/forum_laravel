@@ -11,18 +11,10 @@ S
 #database/seeders/DatabaseSeeder.php,a/c/aca1efccd4101e0c9bdd34803577859ace08ef45
 n
 >database/migrations/2021_12_13_062244_create_answers_table.php,f/a/fa1666635d20156409382822dbbf4203d2e4dcda
-Y
-)app/Http/Controllers/AnswerController.php,a/e/aecd568e762f960acfa996a0e3169c306d579a5c
-E
-app/Models/Answer.php,a/1/a179ef693c991d5d681758f4ea83d5c579714718
-U
-%app/Http/Resources/AnswerResource.php,e/c/ec8a515930751f62bf24509e6fb06626371b2a7e
 J
 app/Models/AnswerReply.php,b/0/b0b4430afe6620a95be9c5937bf1a0d950b9fe9f
 ^
 .app/Http/Controllers/ReplyAnswerController.php,8/6/86c2f29c02a6fcf85d4ae01ffa7e02ecf061ad25
-W
-'app/Http/Resources/QuestionResource.php,4/e/4e36d6034bb6db879078d46db7521d6a662f8dee
 =
 composer.json,3/9/3957b91a0d8450cea0115cfd5af69eac90d75897
 7
@@ -31,14 +23,10 @@ W
 config/queue.php,e/b/eb49dc3fa7268b6ade2466fb9f9bc11bb4d71410
 B
 config/sanctum.php,d/6/d672b24c54996b85321201cf5c8ebbfba39adab9
-G
-app/Models/Question.php,0/e/0eac3c4b55808da05425b0ffed3038075bedd2e2
 B
 config/hashing.php,5/6/563507cf8da540e418fd74e39011250812e91596
 R
 "database/factories/UserFactory.php,3/4/3401747fc769758d97931473eab6222bc2abf009
-[
-+app/Http/Controllers/QuestionController.php,a/9/a9726c8bc02c44c4240ffbb9731182896bd52789
 C
 app/Http/Kernel.php,4/0/405f423e61f666bcedb754ae8befdce9e746176e
 @

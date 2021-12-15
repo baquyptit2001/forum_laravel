@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\QuestionResource;
 use App\Models\Question;
+use App\Models\QuestionVote;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -38,6 +39,33 @@ class QuestionController extends Controller
                 'status_code' => 500
             ]);
         }
+    }
+
+    public function vote(Request $request)
+    {
+        $extist_vote = QuestionVote::where('user_id', $request->user_id)->where('question_id', $request->question_id)->first();
+        if($extist_vote) {
+            if ($extist_vote->vote == $request->vote){
+                $extist_vote->delete();
+                return response()->json([
+                    'status_code' => 200,
+                    'message' => 'Vote thành công',
+                ]);
+            }
+        }
+        $vote = array(
+            'question_id' => $request->question_id,
+            'user_id' => $request->user_id,
+            'vote' => $request->vote
+        );
+        QuestionVote::updateOrCreate(
+            ['question_id' => $request->question_id, 'user_id' => $request->user_id],
+            $vote
+        );
+        return response()->json([
+            'status_code' => 200,
+            'message' => 'Vote thành công',
+        ]);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\QuestionVote;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,6 +16,20 @@ class QuestionResource extends JsonResource
      */
     public function toArray($request): array
     {
+        $vote_up = '';
+        $vote_down = '';
+        if (auth('sanctum')->user()) {
+            $votee = QuestionVote::where('question_id', $this->id)
+                ->where('user_id', auth('sanctum')->user()->id)
+                ->first();
+            if ($votee) {
+                if($votee->vote == 1){
+                    $vote_up = 'upvote-on';
+                } else {
+                    $vote_down = 'downvote-on';
+                }
+            }
+        }
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -29,7 +44,10 @@ class QuestionResource extends JsonResource
             'vote' => $this->vote_count,
             'answers' => AnswerResource::collection($this->answer->where('id', '!=', $this->best_answer_id)),
             'answer_count' => count($this->answer),
-            'best_answer' => AnswerResource::make($this->best_answer)
+            'best_answer' => AnswerResource::make($this->best_answer),
+            'request' => $request,
+            'vote_up' => $vote_up,
+            'vote_down' => $vote_down,
         ];
     }
 }

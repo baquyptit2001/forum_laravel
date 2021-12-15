@@ -10,6 +10,7 @@ class Answer extends Model
     use HasFactory;
 
     protected $fillable = ['question_id', 'answer', 'user_id'];
+    protected $appends = ['vote_count'];
 
     public function question()
     {
@@ -24,6 +25,11 @@ class Answer extends Model
     public function reply()
     {
         return $this->hasMany(AnswerReply::class, 'answer_id');
+    }
+
+    public function getVoteCountAttribute()
+    {
+        return AnswerVote::where('answer_id', $this->id)->sum('vote');
     }
 
 }

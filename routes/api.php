@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\ReplyAnswerController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -11,24 +15,27 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('accounts')->group(function () {
     Route::get('/', [UserController::class, 'index']);
-    Route::post('sign-up', [\App\Http\Controllers\UserController::class, 'signUp'])->name('user.signup');
-    Route::post('sign-in', [\App\Http\Controllers\UserController::class, 'signIn'])->name('user.signin');
+    Route::get('isLogged', [UserController::class, 'isLogged']);
+    Route::post('sign-up', [UserController::class, 'signUp'])->name('user.signup');
+    Route::post('sign-in', [UserController::class, 'signIn'])->name('user.signin');
     Route::group(['middleware' => 'auth:sanctum'], function () {
-        Route::get('log-out', [\App\Http\Controllers\UserController::class, 'logOut'])->name('user.logout')->middleware('auth:sanctum');
-        Route::get('info', [\App\Http\Controllers\UserController::class, 'getInfo'])->name('user.info');
+        Route::get('log-out', [UserController::class, 'logOut'])->name('user.logout')->middleware('auth:sanctum');
+        Route::get('info', [UserController::class, 'getInfo'])->name('user.info');
     });
-    Route::post('reset-password', [\App\Http\Controllers\ResetPasswordController::class, 'sendMail'])->name('user.reset-password');
-    Route::post('reset-password/{token}', [\App\Http\Controllers\ResetPasswordController::class, 'reset'])->name('user.reset');
+    Route::post('reset-password', [ResetPasswordController::class, 'sendMail'])->name('user.reset-password');
+    Route::post('reset-password/{token}', [ResetPasswordController::class, 'reset'])->name('user.reset');
 });
 
 Route::group(['prefix' => 'questions'], function () {
     Route::group(['middleware' => 'auth:sanctum'], function () {
-        Route::post('add', [\App\Http\Controllers\QuestionController::class, 'store'])->name('question.add');
-        Route::post('add_answer', [\App\Http\Controllers\AnswerController::class, 'store'])->name('answer.add');
-        Route::post('reply_answer', [\App\Http\Controllers\ReplyAnswerController::class, 'store'])->name('reply.add');
-        Route::post('choose_best_answer', [\App\Http\Controllers\QuestionController::class, 'best_answer'])->name('question.best_answer');
+        Route::post('add', [QuestionController::class, 'store'])->name('question.add');
+        Route::post('add_answer', [AnswerController::class, 'store'])->name('answer.add');
+        Route::post('reply_answer', [ReplyAnswerController::class, 'store'])->name('reply.add');
+        Route::post('choose_best_answer', [QuestionController::class, 'best_answer'])->name('question.best_answer');
     });
-    Route::get('{slug}', [\App\Http\Controllers\QuestionController::class, 'show'])->name('question.show');
-    Route::get('/', [\App\Http\Controllers\QuestionController::class, 'index'])->name('question.list');
+    Route::post('vote', [QuestionController::class, 'vote'])->name('question.vote');
+    Route::post('answer_vote', [AnswerController::class, 'vote'])->name('answer.vote');
+    Route::get('{slug}', [QuestionController::class, 'show'])->name('question.show');
+    Route::get('/', [QuestionController::class, 'index'])->name('question.list');
 });
 

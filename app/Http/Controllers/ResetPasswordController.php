@@ -51,21 +51,27 @@ class ResetPasswordController extends Controller
             'password.between' => 'Mật khẩu phải có độ dài từ 6 đến 16 ký tự',
             'password.confirmed' => 'Mật khẩu không trùng khớp',
         ]);
-        $passwordReset = PasswordReset::where('token', $token)->firstOrFail();
-        if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
+        try {
+            $passwordReset = PasswordReset::where('token', $token)->firstOrFail();
+            if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
+                $passwordReset->delete();
+
+                return response()->json([
+                    'message' => 'This password reset token is invalid.',
+                ], 422);
+            }
+            $user = User::where('email', $passwordReset->email)->firstOrFail();
+            $user->password = Hash::make($request->password);
             $passwordReset->delete();
 
             return response()->json([
-                'message' => 'This password reset token is invalid.',
+                'status_code' => 200,
+                'success' => $user->save(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Đã xảy ra lỗi, vui lòng thử lại sau',
             ], 422);
         }
-        $user = User::where('email', $passwordReset->email)->firstOrFail();
-        $user->password = Hash::make($request->password);
-        $passwordReset->delete();
-
-        return response()->json([
-            'status_code' => 200,
-            'success' => $user->save(),
-        ]);
     }
 }

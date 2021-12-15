@@ -61,11 +61,16 @@ class Question extends Model
 
     public function getVoteCountAttribute(): int
     {
-        return $this->votes()->where('vote', true)->count() - $this->votes()->where('vote', false)->count();
+        return QuestionVote::where('question_id', $this->id)->sum('vote');
     }
 
     public function getStatusAttribute() {
-        $array = ['', 'answered-accepted', 'answered'];
-        return array_random($array);
+        if ($this->best_answer_id) {
+            return 'answered-accepted';
+        }
+        if ($this->answer()->count() > 0) {
+            return 'answered';
+        }
+        return '';
     }
 }
