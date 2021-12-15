@@ -23,6 +23,7 @@ Route::prefix('accounts')->group(function () {
         Route::get('info', [UserController::class, 'getInfo'])->name('user.info');
         Route::post('profile_update', [UserController::class, 'updateProfile'])->name('user.update');
     });
+    Route::get('info/{id}', [UserController::class, 'getInfoById'])->name('user.info.id');
     Route::post('reset-password', [ResetPasswordController::class, 'sendMail'])->name('user.reset-password');
     Route::post('reset-password/{token}', [ResetPasswordController::class, 'reset'])->name('user.reset');
     Route::get('getTimeMember/{id}', [UserController::class, 'getTimeMember'])->name('user.time');

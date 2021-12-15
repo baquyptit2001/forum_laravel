@@ -34,7 +34,7 @@ class AnswerResource extends JsonResource
             'user' => UserResource::make($this->user),
             'answer' => $this->answer,
             'created_at' => $this->created_at->diffForHumans(),
-            'reply' => $this->reply,
+            'reply' => ReplyResource::collection($this->reply),
             'vote' => $this->vote_count,
             'vote_up' => $vote_up,
             'vote_down' => $vote_down,

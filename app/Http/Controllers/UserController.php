@@ -7,7 +7,10 @@ use App\Http\Requests\AccountRequest\SignupRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Profile;
 use App\Models\User;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -49,7 +52,7 @@ class UserController extends Controller
         $profile = new Profile();
         $profile->user_id = $user->id;
         $profile->display_name = $user->username;
-        $profile->avatar = 'img4.jpg';
+        $profile->avatar = 'assets/avatar/img4.jpg';
         $profile->save();
         return __("Đăng ký thành công");
     }
@@ -79,7 +82,7 @@ class UserController extends Controller
             $user = User::where('username', $request->data['username'])->first();
 
             if (!Hash::check($request->data['password'], $user->password, [])) {
-                throw new \Exception('Tài khoản hoặc mật khẩu không đúng');
+                throw new Exception('Tài khoản hoặc mật khẩu không đúng');
             }
 
             $tokenResult = $user->createToken('authToken')->plainTextToken;
@@ -90,7 +93,7 @@ class UserController extends Controller
                 'user' => UserResource::make($user),
                 'token_type' => 'Bearer',
             ]);
-        } catch (\Exception $error) {
+        } catch (Exception $error) {
             return response()->json([
                 'status_code' => 500,
                 'message' => 'Đăng nhập thất bại',
@@ -99,7 +102,7 @@ class UserController extends Controller
         }
     }
 
-    public function logOut(): \Illuminate\Http\JsonResponse
+    public function logOut(): JsonResponse
     {
         try {
             auth()->user()->tokens()->delete();
@@ -107,7 +110,7 @@ class UserController extends Controller
                 'status_code' => 200,
                 'message' => 'Đăng xuất thành công'
             ]);
-        } catch (\Exception $error) {
+        } catch (Exception $error) {
             return response()->json([
                 'status_code' => 500,
                 'message' => 'Đăng xuất thất bại',
@@ -120,7 +123,7 @@ class UserController extends Controller
     {
         try {
             $tokens = PersonalAccessToken::findToken($request->bearerToken());
-        } catch (\Exception $error) {
+        } catch (Exception $error) {
             return response()->json([
                 'status_code' => 500,
                 'message' => 'Invalid Token',
@@ -133,13 +136,19 @@ class UserController extends Controller
 
     }
 
+    public function getInfoById($id)
+    {
+        return response()->json(UserResource::make(User::find($id)));
+
+    }
+
     public function updateProfile(Request $request)
     {
         if ($request->hasFile('avatar')) {
             $file = $request->file('avatar');
 
             $destinationPath = public_path('/assets/avatar');
-            $fileName = $request->user_id . $file->getClientOriginalExtension();;
+            $fileName = $request->user_id . $file->getClientOriginalExtension();
             $file->move($destinationPath, $fileName);
             Profile::where('user_id', $request->user_id)->update([
                 'avatar' => 'assets/avatar/' . $fileName,
@@ -158,8 +167,8 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\User $user
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @return Response
      */
     public function show(User $user)
     {
@@ -169,8 +178,8 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\User $user
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @return Response
      */
     public function edit(User $user)
     {
@@ -180,9 +189,9 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\User $user
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param User $user
+     * @return Response
      */
     public function update(Request $request, User $user)
     {
@@ -192,8 +201,8 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\User $user
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @return Response
      */
     public function destroy(User $user)
     {

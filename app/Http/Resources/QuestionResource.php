@@ -36,6 +36,7 @@ class QuestionResource extends JsonResource
             'slug' => $this->slug,
             'question' => $this->question,
             'user' => $this->user,
+            'user_id' => $this->user_id,
             'username' => $this->user->profile->display_name,
             'avatar' => env('APP_URL') . $this->user->profile->avatar,
             'status' => $this->status,
@@ -46,7 +47,6 @@ class QuestionResource extends JsonResource
             'answers' => AnswerResource::collection($this->answer->where('id', '!=', $this->best_answer_id)),
             'answer_count' => count($this->answer),
             'best_answer' => AnswerResource::make($this->best_answer),
-            'request' => $request,
             'vote_up' => $vote_up,
             'vote_down' => $vote_down,
         ];
