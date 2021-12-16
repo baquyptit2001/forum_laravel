@@ -5,12 +5,13 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ReplyAnswerController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UserController;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    return new UserResource($request->user());
 });
 
 Route::prefix('accounts')->group(function () {
@@ -39,6 +40,6 @@ Route::group(['prefix' => 'questions'], function () {
     Route::post('vote', [QuestionController::class, 'vote'])->name('question.vote');
     Route::post('answer_vote', [AnswerController::class, 'vote'])->name('answer.vote');
     Route::get('{slug}', [QuestionController::class, 'show'])->name('question.show');
-    Route::get('/', [QuestionController::class, 'index'])->name('question.list');
+    Route::get('/{size}/{page}', [QuestionController::class, 'index'])->name('question.list');
 });
 

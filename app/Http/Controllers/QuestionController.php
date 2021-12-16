@@ -15,10 +15,12 @@ class QuestionController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index($size, $page): JsonResponse
     {
-        $return = QuestionResource::collection(Question::all());
-        return response()->json($return);
+        $return = QuestionResource::collection(Question::all()->skip(($page - 1) * $size)->take($size));
+        return response()->json([
+            $return, Question::count(),
+        ]);
     }
 
     public function store(Request $request): JsonResponse
