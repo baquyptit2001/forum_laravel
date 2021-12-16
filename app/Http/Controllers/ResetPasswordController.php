@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ForgotPasswordJob;
 use App\Models\PasswordReset;
 use App\Models\User;
 use App\Notifications\ResetPasswordRequest;
@@ -33,7 +34,7 @@ class ResetPasswordController extends Controller
             'token' => Str::random(60),
         ]);
         if ($passwordReset) {
-            $user->notify(new ResetPasswordRequest($passwordReset->token));
+            ForgotPasswordJob::dispatch($user, $passwordReset->token);
         }
 
         return response()->json([

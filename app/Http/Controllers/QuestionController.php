@@ -13,11 +13,13 @@ class QuestionController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param $size
+     * @param $page
      * @return JsonResponse
      */
     public function index($size, $page): JsonResponse
     {
-        $return = QuestionResource::collection(Question::all()->skip(($page - 1) * $size)->take($size));
+        $return = QuestionResource::collection(Question::paginate($size));
         return response()->json([
             $return, Question::count(),
         ]);

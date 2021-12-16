@@ -14,6 +14,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return new UserResource($request->user());
 });
 
+Route::get('/abc', function () {
+    phpinfo();
+});
+
 Route::prefix('accounts')->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::get('isLogged', [UserController::class, 'isLogged']);
@@ -25,7 +29,7 @@ Route::prefix('accounts')->group(function () {
         Route::post('profile_update', [UserController::class, 'updateProfile'])->name('user.update');
     });
     Route::get('info/{id}', [UserController::class, 'getInfoById'])->name('user.info.id');
-    Route::post('reset-password', [ResetPasswordController::class, 'sendMail'])->name('user.reset-password');
+    Route::post('reset-password', [ResetPasswordController::class, 'sendMail'])->name('password.reset');
     Route::post('reset-password/{token}', [ResetPasswordController::class, 'reset'])->name('user.reset');
     Route::get('getTimeMember/{id}', [UserController::class, 'getTimeMember'])->name('user.time');
 });
