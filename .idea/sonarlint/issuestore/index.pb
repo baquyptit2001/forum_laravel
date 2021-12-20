@@ -1,6 +1,4 @@
 
->
-routes/web.php,6/b/6b9a783d9b43fee50fd28f56dbd1856d2608f305
 p
 @database/migrations/2021_12_07_100747_create_questions_table.php,b/f/bf05aea7c4f0a3e35cf7e90b693bb88be5f65354
 s
@@ -21,10 +19,6 @@ B
 config/sanctum.php,d/6/d672b24c54996b85321201cf5c8ebbfba39adab9
 B
 config/hashing.php,5/6/563507cf8da540e418fd74e39011250812e91596
-C
-app/Http/Kernel.php,4/0/405f423e61f666bcedb754ae8befdce9e746176e
-A
-bootstrap/app.php,f/4/f4e0869689d9f3473be5a60831013b90d22203ca
 r
 Bdatabase/migrations/2019_08_19_000000_create_failed_jobs_table.php,1/f/1f602a21e13ac2fa47afd78866311d456f21841f
 }
@@ -35,8 +29,6 @@ v
 Fdatabase/migrations/2014_10_12_100000_create_password_resets_table.php,e/f/eff59cfca55470b5a81fdbeb82498e8bfe5c8174
 K
 app/Models/QuestionVote.php,4/1/41ebc162a51c69780ff995b9f29ac814a7164324
-W
-'app/Http/Resources/QuestionResource.php,4/e/4e36d6034bb6db879078d46db7521d6a662f8dee
 U
 %app/Http/Resources/AnswerResource.php,e/c/ec8a515930751f62bf24509e6fb06626371b2a7e
 S

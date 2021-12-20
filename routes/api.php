@@ -6,6 +6,8 @@ use App\Http\Controllers\ReplyAnswerController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UserController;
 use App\Http\Resources\UserResource;
+use App\Models\Question;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +26,7 @@ Route::prefix('accounts')->group(function () {
     Route::post('sign-up', [UserController::class, 'signUp'])->name('user.signup');
     Route::post('sign-in', [UserController::class, 'signIn'])->name('user.signin');
     Route::group(['middleware' => 'auth:sanctum'], function () {
-        Route::get('log-out', [UserController::class, 'logOut'])->name('user.logout')->middleware('auth:sanctum');
+        Route::get('log-out', [UserController::class, 'logOut'])->name('user.logout');
         Route::get('info', [UserController::class, 'getInfo'])->name('user.info');
         Route::post('profile_update', [UserController::class, 'updateProfile'])->name('user.update');
     });
