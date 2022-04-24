@@ -34,6 +34,8 @@ Route::prefix('accounts')->group(function () {
     Route::post('reset-password', [ResetPasswordController::class, 'sendMail'])->name('password.reset');
     Route::post('reset-password/{token}', [ResetPasswordController::class, 'reset'])->name('user.reset');
     Route::get('getTimeMember/{id}', [UserController::class, 'getTimeMember'])->name('user.time');
+    Route::post('send-token', [UserController::class, 'sendToken'])->name('user.login.sms');
+    Route::post('login-with-token', [UserController::class, 'loginWithToken'])->name('user.login.token');
 });
 
 Route::group(['prefix' => 'questions'], function () {

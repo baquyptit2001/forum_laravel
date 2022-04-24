@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AccountRequest\SigninRequest;
 use App\Http\Requests\AccountRequest\SignupRequest;
 use App\Http\Resources\UserResource;
+use App\Jobs\MessageTokenJob;
 use App\Models\Profile;
 use App\Models\User;
+use App\Models\OTP;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -47,6 +49,7 @@ class UserController extends Controller
         $validator = $this->validate($request, array('*.email' => 'required|email', '*.username' => 'required', '*.password' => 'required'));
         $user->username = $request['data']['username'];
         $user->email = $request['data']['email'];
+        $user->phone = '+84' . substr($request['data']['phone'], 1);
         $user->password = Hash::make($request['data']['password']);
         $user->save();
         $profile = new Profile();
@@ -207,5 +210,58 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+
+    public function __generateToken(): string
+    {
+        return sprintf("%06d", mt_rand(1, 999999));
+    }
+
+    public function sendToken(Request $request)
+    {
+        $phone = $request->phone;
+        $user = User::where('phone', $phone)->first();
+        if ($user) {
+            $token = $this->__generateToken();
+            $otp = new Otp();
+            $otp->OTP = $token;
+            $otp->user_id = $user->id;
+            $otp->save();
+            if (MessageTokenJob::dispatch($user, $token)) {
+                return response()->json([
+                    'status_code' => 200,
+                    'message' => 'Gửi mã xác thực thành công'
+                ]);
+            } else {
+                return response()->json([
+                    'status_code' => 500,
+                    'message' => 'Gửi mã xác thực thất bại'
+                ]);
+            }
+        }
+        return response()->json([
+            'status_code' => 500,
+            'message' => 'Số điện thoại không tồn tại'
+        ]);
+    }
+
+    public function loginWithToken(Request $request)
+    {
+        $user_id = OTP::where('OTP', $request->token)->first()->user_id;
+        $user = User::find($user_id);
+        if ($user) {
+            $tokenResult = $user->createToken('authToken')->plainTextToken;
+            return response()->json([
+                'status_code' => 200,
+                'access_token' => $tokenResult,
+                'user' => UserResource::make($user),
+                'token_type' => 'Bearer',
+            ]);
+        } else {
+            return response()->json([
+                'status_code' => 500,
+                'message' => 'Mã xác thực không đúng'
+            ]);
+        }
     }
 }

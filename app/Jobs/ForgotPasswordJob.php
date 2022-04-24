@@ -2,15 +2,14 @@
 
 namespace App\Jobs;
 
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Notifications\ResetPasswordRequest;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
-use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class ForgotPasswordJob implements ShouldQueue
 {
@@ -27,8 +26,7 @@ class ForgotPasswordJob implements ShouldQueue
 
     public function __construct($user, $token)
     {
-        $this->user = $user;
-        $this->token = $token;
+        $user->notify(new ResetPasswordRequest($token));
     }
 
     /**
@@ -38,8 +36,6 @@ class ForgotPasswordJob implements ShouldQueue
      */
     public function handle()
     {
-        Log::channel('mail')->info("Forgort Password Email sending to {$this->user->email} started at " . date('Y-m-d H:i:s'));
-        $this->user->notify(new ResetPassword($this->token));
-        Log::channel('mail')->info("Forgort Password Email sending to {$this->user->email} completed at " . date('Y-m-d H:i:s'));
+        
     }
 }

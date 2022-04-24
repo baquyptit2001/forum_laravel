@@ -4,6 +4,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Log;
+
 class ResetPasswordRequest extends Notification implements ShouldQueue
 {
     use Queueable;
@@ -36,7 +38,8 @@ class ResetPasswordRequest extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         $url = 'http://localhost:3000/accounts/reset_password/' . $this->token;
-
+        Log::channel('mail')->info("URL = $url");
+        
         return (new MailMessage)
             ->line('You are receiving this email because we received a password reset request for your account.')
             ->action('Reset Password', url($url))

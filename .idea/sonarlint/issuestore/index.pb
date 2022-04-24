@@ -35,3 +35,15 @@ S
 #app/Http/Resources/UserResource.php,f/6/f6770a192e2fd7fec6853c6fc802aae1effa0302
 S
 #app/Http/Controllers/Controller.php,2/e/2ed23e1749f02eb8e561f0a531d07863e7cf9fb9
+@
+config/queue.php,e\b\eb49dc3fa7268b6ade2466fb9f9bc11bb4d71410
+9
+	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
+Z
+*app/Notifications/ResetPasswordRequest.php,a\f\af1b35c580a078af2439d9c99880ad99db01c946
+W
+'app/Http/Controllers/UserController.php,7\d\7de9f5d267d12a172eff77837bcb8fb2e88564c2
+`
+0app/Http/Controllers/ResetPasswordController.php,a\5\a5866a04e0b5f916021d64030be8eaf28d0d7538
+4
+.env,3\c\3c84dcdc6bbe3d7817c49dcdc327b926fea1808a

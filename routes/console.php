@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\OTP;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 
@@ -17,3 +18,11 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+Artisan::command('delete_old_token', function () {
+    $date = new DateTime;
+    $date->modify('-5 minutes');
+    $formatted = $date->format('Y-m-d H:i:s');
+    OTP::where('updated_at', '<=', $formatted)->delete();
+    $this->info('Delete old token success');
+})->purpose('Delete old token');

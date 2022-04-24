@@ -2,6 +2,7 @@
 
 namespace Illuminate\Auth\Access;
 
+use Closure;
 use Exception;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Contracts\Container\Container;
@@ -115,6 +116,64 @@ class Gate implements GateContract
         }
 
         return true;
+    }
+
+    /**
+     * Perform an on-demand authorization check. Throw an authorization exception if the condition or callback is false.
+     *
+     * @param  \Illuminate\Auth\Access\Response|\Closure|bool  $condition
+     * @param  string|null  $message
+     * @param  string|null  $code
+     * @return \Illuminate\Auth\Access\Response
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function allowIf($condition, $message = null, $code = null)
+    {
+        return $this->authorizeOnDemand($condition, $message, $code, true);
+    }
+
+    /**
+     * Perform an on-demand authorization check. Throw an authorization exception if the condition or callback is true.
+     *
+     * @param  \Illuminate\Auth\Access\Response|\Closure|bool  $condition
+     * @param  string|null  $message
+     * @param  string|null  $code
+     * @return \Illuminate\Auth\Access\Response
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function denyIf($condition, $message = null, $code = null)
+    {
+        return $this->authorizeOnDemand($condition, $message, $code, false);
+    }
+
+    /**
+     * Authorize a given condition or callback.
+     *
+     * @param  \Illuminate\Auth\Access\Response|\Closure|bool  $condition
+     * @param  string|null  $message
+     * @param  string|null  $code
+     * @param  bool  $allowWhenResponseIs
+     * @return \Illuminate\Auth\Access\Response
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    protected function authorizeOnDemand($condition, $message, $code, $allowWhenResponseIs)
+    {
+        $user = $this->resolveUser();
+
+        if ($condition instanceof Closure) {
+            $response = $this->canBeCalledWithUser($user, $condition)
+                            ? $condition($user)
+                            : new Response(false, $message, $code);
+        } else {
+            $response = $condition;
+        }
+
+        return with($response instanceof Response ? $response : new Response(
+            (bool) $response === $allowWhenResponseIs, $message, $code
+        ))->authorize();
     }
 
     /**
@@ -279,10 +338,6 @@ class Gate implements GateContract
      */
     public function check($abilities, $arguments = [])
     {
-        if (is_array($abilities) && class_exists($abilities[0])) {
-            $abilities = [$abilities];
-        }
-
         return collect($abilities)->every(function ($ability) use ($arguments) {
             return $this->inspect($ability, $arguments)->allowed();
         });
@@ -297,13 +352,6 @@ class Gate implements GateContract
      */
     public function any($abilities, $arguments = [])
     {
-        // Gate::any([Policy::class, ['view', 'create']], $post)...
-        if (isset($abilities[1]) && is_array($abilities[1])) {
-            $abilities = collect($abilities[1])->map(function ($ability) use ($abilities) {
-                return [$abilities[0], $ability];
-            })->all();
-        }
-
         return collect($abilities)->contains(function ($ability) use ($arguments) {
             return $this->check($ability, $arguments);
         });
@@ -567,19 +615,6 @@ class Gate implements GateContract
             return $callback;
         }
 
-        if (is_array($ability)) {
-            [$class, $method] = $ability;
-
-            if ($this->canBeCalledWithUser($user, $class, $method)) {
-                return $this->getCallableFromClassAndMethod($class, $method);
-            }
-        }
-
-        if (class_exists($ability) &&
-            $this->canBeCalledWithUser($user, $ability, '__invoke')) {
-            return $this->getCallableFromClassAndMethod($ability);
-        }
-
         if (isset($this->stringCallbacks[$ability])) {
             [$class, $method] = Str::parseCallback($this->stringCallbacks[$ability]);
 
@@ -803,20 +838,6 @@ class Gate implements GateContract
     protected function resolveUser()
     {
         return call_user_func($this->userResolver);
-    }
-
-    /**
-     * Get a callable from a class and method.
-     *
-     * @param  string  $class
-     * @param  string  $method
-     * @return \Closure
-     */
-    protected function getCallableFromClassAndMethod($class, $method = '__invoke')
-    {
-        return function (...$params) use ($class, $method) {
-            return $this->container->make($class)->{$method}(...$params);
-        };
     }
 
     /**

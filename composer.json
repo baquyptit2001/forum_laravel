@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "aloha/twilio": "^5.0",
         "barryvdh/laravel-ide-helper": "^2.10",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -14,7 +15,8 @@
         "laravel/sanctum": "^2.12",
         "laravel/telescope": "^4.6",
         "laravel/tinker": "^2.5",
-        "nesbot/carbon": "^2.55"
+        "nesbot/carbon": "^2.55",
+        "twilio/sdk": "^6.35"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
