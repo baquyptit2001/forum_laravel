@@ -22,7 +22,7 @@ class MessageTokenJob implements ShouldQueue
      */
     public function __construct($user, $token)
     {
-        $twilio = new Twilio('ACf82cd86fa61a2616d201f163da22d885', 'cc215509502cbd91a8cf6fe10de3aae1', '+16067211796');
+        $twilio = new Twilio('ACf82cd86fa61a2616d201f163da22d885', 'df51bdef9a6915de13941c84a71cf087', '+16067211796');
         return $twilio->message($user->phone, 'Your verification code is '.$token);
     }
 
