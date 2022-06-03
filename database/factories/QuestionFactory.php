@@ -29,7 +29,7 @@ class QuestionFactory extends Factory
             'question' => $this->faker->paragraph(3, 5),
             'slug' => $slug,
             'views' => $this->faker->numberBetween(0, 1000),
-            'user_id' => random_int(1, 16),
+            'user_id' => random_int(1, 21),
         ];
     }
 }

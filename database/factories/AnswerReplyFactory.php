@@ -22,9 +22,9 @@ class AnswerReplyFactory extends Factory
     public function definition()
     {
         return [
-            'answer_id' => $this->faker->numberBetween(1, 200),
+            'answer_id' => $this->faker->numberBetween(1, 400),
             'user_id' => $this->faker->numberBetween(1, 16),
-            'body' => $this->faker->sentence,
+            'body' => $this->faker->sentence(5),
         ];
     }
 }

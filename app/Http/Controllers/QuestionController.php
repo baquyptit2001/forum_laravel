@@ -102,4 +102,9 @@ class QuestionController extends Controller
         }
         return $question->save();
     }
+
+    public function find_question($title) {
+        $question = QuestionResource::collection(Question::where('title', 'like', '%'.$title.'%')->limit(5)->get());
+        return response()->json($question);
+    }
 }

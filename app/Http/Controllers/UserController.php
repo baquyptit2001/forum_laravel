@@ -151,7 +151,7 @@ class UserController extends Controller
             $file = $request->file('avatar');
 
             $destinationPath = public_path('/assets/avatar');
-            $fileName = $request->user_id . $file->getClientOriginalExtension();
+            $fileName = $request->user_id . '.' .$file->getClientOriginalExtension();
             $file->move($destinationPath, $fileName);
             Profile::where('user_id', $request->user_id)->update([
                 'avatar' => 'assets/avatar/' . $fileName,

@@ -17,7 +17,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/abc', function () {
-    phpinfo();
+    for($i = 2; $i <= 21; $i++) {
+        $user = User::find($i);
+        $profile = new \App\Models\Profile();
+        $profile->user_id = $i;
+        $profile->avatar = 'assets/avatar/img4.jpg';
+        $profile->display_name = $user->username;
+        $profile->save();
+    }
 });
 
 Route::prefix('accounts')->group(function () {
@@ -44,6 +51,7 @@ Route::group(['prefix' => 'questions'], function () {
         Route::post('add_answer', [AnswerController::class, 'store'])->name('answer.add');
         Route::post('reply_answer', [ReplyAnswerController::class, 'store'])->name('reply.add');
         Route::post('choose_best_answer', [QuestionController::class, 'best_answer'])->name('question.best_answer');
+        Route::get('find/{title}', [QuestionController::class, 'find_question'])->name('question.find');
     });
     Route::post('vote', [QuestionController::class, 'vote'])->name('question.vote');
     Route::post('answer_vote', [AnswerController::class, 'vote'])->name('answer.vote');
