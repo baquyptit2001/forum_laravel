@@ -220,6 +220,9 @@ class UserController extends Controller
     public function sendToken(Request $request)
     {
         $phone = $request->phone;
+        if ($phone[0] != '+') {
+            $phone = '+84' . substr($phone, 1);
+        }
         $user = User::where('phone', $phone)->first();
         if ($user) {
             $token = $this->__generateToken();

@@ -51,8 +51,8 @@ Route::group(['prefix' => 'questions'], function () {
         Route::post('add_answer', [AnswerController::class, 'store'])->name('answer.add');
         Route::post('reply_answer', [ReplyAnswerController::class, 'store'])->name('reply.add');
         Route::post('choose_best_answer', [QuestionController::class, 'best_answer'])->name('question.best_answer');
-        Route::get('find/{title}', [QuestionController::class, 'find_question'])->name('question.find');
     });
+    Route::get('find/{title}', [QuestionController::class, 'find_question'])->name('question.find');
     Route::post('vote', [QuestionController::class, 'vote'])->name('question.vote');
     Route::post('answer_vote', [AnswerController::class, 'vote'])->name('answer.vote');
     Route::get('{slug}', [QuestionController::class, 'show'])->name('question.show');
